@@ -1,0 +1,82 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  background: linear-gradient(#fff, #0000ff4a);
+  min-height: 100vh;
+  padding: 0 1rem;
+}
+
+h1 {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #ccc;
+}
+
+input,
+select {
+  padding: 0.15rem;
+  outline: none;
+}
+
+button {
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  background-color: black;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-top: 0.25rem;
+  border-radius: 0.25rem;
+  transition: background-color 150ms ease-in-out, color 150ms ease-in-out;
+}
+
+button:hover {
+  background-color: #efefef;
+  color: black;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+.panel {
+  font-size: 0.75rem;
+  color: white;
+  font-weight: 500;
+  padding: 0.5rem;
+  text-align: center;
+  border-radius: 0.25rem;
+}
+
+.error {
+  background-color: red;
+}
+
+.success {
+  background-color: green;
+}
+
+@media (max-width: 600px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+  }
+}

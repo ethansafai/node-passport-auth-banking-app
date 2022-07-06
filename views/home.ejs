@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <title>Banking Home</title>
+    <link rel="stylesheet" href="css/home.css" />
+  </head>
+  <body>
+    <h1><span id="greeting"></span>, <%= locals.user.firstName %></h1>
+    <hr>
+    <div class="forms">
+      <form action="/account" method="POST">
+        <h2>Create an account</h2>
+        <hr>
+        <label for="name">Name:</label>
+        <input id="name" type="text" name="name" required />
+        <p>Account Type</p>
+        <div>
+          <label for="checking">Checking:</label>
+          <input 
+            id="checking" 
+            type="radio" 
+            name="type" 
+            value="checking" 
+            checked="true" 
+          />
+          <label for="savings">Savings:</label>
+          <input id="savings" type="radio" name="type" value="savings" />
+        </div>
+        <button type="submit">Create Account</button>
+        <% if (locals.accountCreated) { %>
+          <p class="panel success">Account created</p>
+        <% } else if (locals.sameNameError) { %>
+          <p class="panel error">
+            Error, you already have an account with this name.
+          </p>
+        <% } %>
+      </form>
+      <% if (locals.accounts?.length > 0) { %>
+      <form action="/deposit" method="POST">
+        <h2>Deposit</h2>
+        <hr>
+        <label for="amount">Amount:</label>
+        <input 
+          id="amount" 
+          type="number" 
+          step="0.01" 
+          min="0.01" 
+          name="amount" 
+          required 
+        />
+        <label for="account">Account:</label>
+        <select id="account" name="account">
+          <% locals.accounts?.forEach(account => { %>
+            <option value=<%= account._id %>><%= account.name %> </option> 
+          <% }) %>
+        </select>
+        <button>Deposit</button>
+        <% if (locals.deposited) { %>
+          <p class="panel success">Amount successfully deposited</p>
+        <% } %>
+      </form>
+      <form action="/transfer" method="POST">
+        <h2>Transfer Money</h2>
+        <hr>
+        <label for="transfer-amount">Amount:</label>
+        <input 
+          id="transfer-amount" 
+          type="number" 
+          step="0.01" 
+          min="0.01" 
+          name="amount" 
+          required 
+        />
+        <label for="transfer-account">From Account:</label>
+        <select id="transfer-account" name="account">
+          <% locals.accounts?.forEach(account => { %>
+            <option value=<%= account._id %>><%= account.name %> </option> 
+          <% }) %>
+        </select>
+        <label for="transfer-to-account">To Account (ID):</label>
+        <input 
+          id="transfer-to-account" 
+          type="text" 
+          name="toAccount" 
+          required 
+          spellcheck="false"
+        />
+        <button>Transfer</button>
+        <% if (locals.toAccountError) { %>
+          <p class="panel error">To Account not found</p>
+        <% } else if (locals.insufficientFunds) { %>
+          <p class="panel error">Insufficient funds for transfer</p>
+        <% } else if (locals.sameAccountTransferError) { %>
+          <p class="panel error">Cannot transfer to the same account</p>
+        <% } else if (locals.transferSuccess) { %>
+          <p class="panel success">Success</p>
+        <% } %>
+      </form>
+      <form action="/withdraw" method="POST">
+        <h2>Withdraw Money</h2>
+        <hr>
+        <label for="withdraw-amount">Amount:</label>
+        <input 
+          id="withdraw-amount" 
+          type="number" 
+          step="0.01" 
+          min="0.01" 
+          name="amount" 
+          required 
+        />
+        <label for="withdraw-account">Account:</label>
+        <select id="withdraw-account" name="account">
+          <% locals.accounts?.forEach(account => { %>
+            <option value=<%= account._id %>><%= account.name %> </option> 
+          <% }) %>
+        </select>
+        <button>Withdraw</button>
+        <% if (locals.withdrawInsufficientFunds) { %>
+          <p class="panel error">Insufficient funds for withdraw</p>
+        <% } else if (locals.withdrawSuccess) { %>
+          <p class="panel success">Success</p>
+        <% } %>
+      </form>
+      <form action="/account?_method=DELETE" method="POST">
+        <h2>Delete Account</h2>
+        <hr>
+        <label for="delete-account">Account:</label>
+        <select id="delete-account" name="account">
+          <% locals.accounts?.forEach(account => { %>
+            <option value=<%= account._id %>><%= account.name %> </option> 
+          <% }) %>
+        </select>
+        <button>Delete</button>
+        <% if (locals.accountDeleted) { %>
+          <p class="panel success">Account deleted</p>
+        <% } %>
+      </form>
+    </div>
+    <h2 class="accounts-header">Your Accounts</h2>
+    <div class="accounts">
+      <% locals.accounts?.forEach(account => { %>
+        <div class="account">
+          <p class="name"><%= account.name %></p>
+          <p class="amount">Balance: 
+            $<%= account.balance.toLocaleString() %>
+          </p>
+          <div class="table">
+            <p class="column-title">Deposits:</p>
+            <div class="table-section">
+              <% account.deposits?.forEach(deposit => { %>
+              <div class="table-data">
+                <p>Amount: $<%= deposit.amount.toLocaleString() %></p>
+                <p>Date: <%= deposit.date.toLocaleString() %></p>
+              </div>
+              <% }) %>
+            </div>
+            <p class="column-title">Withdrawls:</p>
+            <div class="table-section">
+              <% account.withdrawls?.forEach(withdrawl => { %>
+                <% if (!withdrawl.failed) { %>
+                  <div class="table-data">
+                    <p>Amount: $<%= withdrawl.amount.toLocaleString() %></p>
+                    <p>Date: <%= withdrawl.date.toLocaleString() %></p>
+                  </div>
+                <% } %>
+              <% }) %>  
+            </div>
+            <p class="column-title">Transactions:</p>
+            <div class="table-section">
+              <% account.transactions?.forEach(transaction => { %>
+                <% if (!transaction.failed) { %>
+                  <div class="table-data">
+                    <p>
+                    <% if (transaction.received) { %>
+                      From:
+                    <% } else { %>
+                      To:
+                    <% } %>
+                    Account ID <%= transaction.account %>
+                    </p>
+                    <p>Amount: $<%= transaction.amount.toLocaleString() %></p>
+                    <p>Date: <%= transaction.date.toLocaleString() %></p>
+                  </div>
+                <% } %>
+              <% }) %>  
+            </div>
+          </div>
+          <button class="show-account-id">Show Account ID</button>
+          <p class="hidden account-id" id=<%= account._id %>>
+            <%= account._id %>
+          </p>
+        </div>
+      <% }) %>
+      </div>
+      <% } %>
+    <form class="logout" action="/logout?_method=DELETE" method="POST">
+      <button class="logout" type="submit">Logout</button>
+    </form>
+    <script src="js/home.js" type="text/javascript"></script>
+  </body>
+</html>

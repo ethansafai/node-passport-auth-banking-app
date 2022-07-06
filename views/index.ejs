@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <title>Banking App</title>
+    <link rel="stylesheet" href="css/index.css" />
+  </head>
+  <body>
+    <h1>Node Passport Authentication Banking App</h1>
+    <hr />
+    <div class="forms">
+      <div>
+        <h2 class="auth-title">Sign Up</h2>
+        <hr />
+        <form action="/signup" method="POST">
+          <label for="first-name">First Name:</label>
+          <input id="first-name" type="text" name="firstName" />
+          <label for="last-name">Last Name:</label>
+          <input id="last-name" type="text" name="lastName" />
+          <label for="gender">Gender:</label>
+          <select id="gender" name="gender">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="non-binary">Non-Binary</option>
+          </select>
+          <label for="age">Age:</label>
+          <input id="age" type="number" name="age" />
+          <label for="income">Yearly income:</label>
+          <input id="income" type="number" name="income" min="0" />
+          <label for="username-signup">Username:</label>
+          <input
+            id="username-signup"
+            type="text"
+            name="username"
+            spellcheck="false"
+          />
+          <label for="password-signup">Password:</label>
+          <input id="password-signup" type="password" name="password" />
+          <button type="submit">Sign Up</button>
+          <% if (locals.signupError) { %>
+          <p class="panel error">Please fill out all fields.</p>
+          <% } else if (locals.userCreated) { %>
+          <p class="panel success">Success. Please log in.</p>
+          <% } %>
+        </form>
+      </div>
+      <div>
+        <h2 class="auth-title">Log In</h2>
+        <hr />
+        <form action="/login" method="POST">
+          <label for="username-login">Username:</label>
+          <input
+            id="username-login"
+            type="text"
+            name="username"
+            spellcheck="false"
+          />
+          <label for="password-login">Password:</label>
+          <input id="password-login" type="password" name="password" />
+          <button type="submit">Log In</button>
+          <% if (messages.error) { %>
+          <p class="panel error"><%= messages.error %></p>
+          <% } %>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

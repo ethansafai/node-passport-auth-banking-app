@@ -1,0 +1,25 @@
+h2 {
+  margin: 0.5rem;
+  text-align: center;
+}
+
+hr {
+  margin-bottom: 1rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.forms {
+  display: flex;
+  justify-content: center;
+  max-width: 1000px;
+  margin: 0 auto;
+  gap: 3rem;
+  flex-wrap: wrap-reverse;
+  padding: 1rem;
+}
